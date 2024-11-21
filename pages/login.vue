@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import axios, { AxiosError } from "axios";
 import { ref } from "vue";
-import MainLayout from '~/layouts/main.vue';
 
 const email = ref<string>('')
 const password = ref<string>('')
@@ -33,12 +32,12 @@ const login = async (e: Event) => {
 </script>
 
 <template>
-    <MainLayout>
+    <NuxtLayout name="main">
         <div class="max-w-screen-md mx-auto p-5">
             <form @submit="login" class="grid gap-3">
                 <div class="grid gap-1">
                     <label for="email">Email</label>
-                    <input type="text" id="email" v-model="email" class="border py-1 px-2" placeholder="user@mail.com"
+                    <input type="email" id="email" v-model="email" class="border py-1 px-2" placeholder="user@mail.com"
                         required>
                 </div>
                 <div class="grid gap-1">
@@ -53,5 +52,5 @@ const login = async (e: Event) => {
                 </div>
             </form>
         </div>
-    </MainLayout>
+    </NuxtLayout>
 </template>
