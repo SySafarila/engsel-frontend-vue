@@ -22,6 +22,9 @@ const login = async (e: Event) => {
         })
 
         isSending.value = false
+        setTimeout(() => {
+            window.location.href = '/admin'
+        }, 500);
     } catch (error) {
         isSending.value = false
         if (error instanceof AxiosError) {

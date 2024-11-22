@@ -16,5 +16,8 @@ export default defineNuxtConfig({
     public: {
       BACKEND_URL: process.env.BACKEND_URL,
     },
+    private: {
+      JWT_SECRET: process.env.JWT_SECRET,
+    },
   },
 });
