@@ -14,3 +14,17 @@ export type CurrentUserResponse = {
     name: string;
   }[];
 };
+
+export type User = {
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  balance: number;
+  roles: {
+    name: string;
+    level: number;
+  }[];
+};
+
+export type Users = User[];
