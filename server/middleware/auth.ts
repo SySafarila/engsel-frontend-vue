@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
   if (!accessToken) {
-    await sendRedirect(event, "/login", 401);
+    return await sendRedirect(event, "/login", 401);
   }
 
   try {
