@@ -23,6 +23,22 @@ const getUsers = async () => {
         console.error(error);
     }
 }
+
+const deleteUser = async (username: string) => {
+    const confirmation = window.confirm('Delete confirmation')
+    if (!confirmation) {
+        return
+    }
+    try {
+        await axios.delete(`${config.public.BACKEND_URL}/users/${username}`, {
+            withCredentials: true
+        })
+        await getUsers()
+        alert('Deleted!')
+    } catch (error) {
+        console.error(error);
+    }
+}
 </script>
 
 <template>
@@ -42,6 +58,12 @@ const getUsers = async () => {
                                 {{ role.name }}
                             </span>
                         </div>
+                    </div>
+                    <div class="flex gap-2 justify-between">
+                        <NuxtLink :to="`/admin/users/${user.username}/edit`" class="text-blue-500 hover:text-blue-600">
+                            Edit</NuxtLink>
+                        <button type="button" class="text-red-500 hover:text-red-600"
+                            @click="deleteUser(user.username)">Delete</button>
                     </div>
                 </div>
             </div>

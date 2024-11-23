@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { onMounted } from "vue";
+import Sidebar from '~/components/admin/Sidebar.vue';
 import useUserData from "~/composables/useUserData";
 import type { CurrentUserResponse } from '~/utils/Types';
 import logout from '~/utils/logout';
-import Sidebar from '~/components/admin/Sidebar.vue';
 
 const { userData, setUserData } = useUserData()
 
@@ -24,7 +24,6 @@ const getCurrentUser = async () => {
         const res = await axios.get(`${config.public.BACKEND_URL}/auth/me`, {
             withCredentials: true
         })
-        console.log(res);
         const data = res.data as CurrentUserResponse
 
         data.roles.forEach(role => {
@@ -48,6 +47,13 @@ const getCurrentUser = async () => {
         })
     } catch (error) {
         console.error(error);
+        if (error instanceof AxiosError) {
+            await logout().then(() => {
+                setTimeout(() => {
+                    window.location.href = '/login'
+                }, 500);
+            })
+        }
     }
 }
 </script>
