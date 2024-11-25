@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import axios from 'axios';
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch, watchEffect } from "vue";
 import type { Users } from "~/utils/Types";
 
 const config = useRuntimeConfig()
-
+const route = useRoute()
+const router = useRouter()
 const users = ref<Users>()
+const search = ref<string>("")
 
 onMounted(() => {
     getUsers()
@@ -13,8 +15,11 @@ onMounted(() => {
 
 const getUsers = async () => {
     try {
-        const res = await axios.get(`${config.public.BACKEND_URL}/users`, {
-            withCredentials: true
+        const res = await axios.get(`${config.public.BACKEND_URL}/admin/users`, {
+            withCredentials: true,
+            params: {
+                identifier: route.query.identifier
+            }
         })
         const data = res.data.users as Users
         users.value = data
@@ -30,7 +35,7 @@ const deleteUser = async (username: string) => {
         return
     }
     try {
-        await axios.delete(`${config.public.BACKEND_URL}/users/${username}`, {
+        await axios.delete(`${config.public.BACKEND_URL}/admin/users/${username}`, {
             withCredentials: true
         })
         await getUsers()
@@ -39,6 +44,19 @@ const deleteUser = async (username: string) => {
         console.error(error);
     }
 }
+
+const onSearch = (e: Event) => {
+    e.preventDefault();
+    router.push(`/admin/users?identifier=${search.value}`)
+}
+
+watch(() => route.query, () => {
+    getUsers()
+})
+
+// watchEffect(() => {
+//     getUsers()
+// })
 </script>
 
 <template>
@@ -46,6 +64,11 @@ const deleteUser = async (username: string) => {
         <div class="flex flex-col gap-4">
             <h1 class="text-2xl font-semibold">Users</h1>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
+                <form class="flex w-full items-center md:col-span-2 gap-2" @submit="onSearch">
+                    <input type="text" name="identifier" id="identifier" class="border py-2 px-3 w-full"
+                        placeholder="Username/Email" v-model="search">
+                    <button type="submit" class="py-2 px-3 bg-green-500 text-white">Search</button>
+                </form>
                 <div v-for="user in users" class="bg-gray-100 p-3 border">
                     <p>{{ user.name }} ({{ user.username }})</p>
                     <p>{{ user.email }}</p>

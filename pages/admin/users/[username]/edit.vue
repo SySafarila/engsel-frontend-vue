@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { onMounted, ref } from "vue";
 import type { Roles, User } from "~/utils/Types";
 
@@ -9,6 +9,8 @@ const user = ref<User>()
 const roles = ref<Roles>([])
 const name = ref<string>("")
 const username = ref<string>("")
+const email = ref<string>("")
+const balance = ref<number>()
 
 
 onMounted(() => {
@@ -18,7 +20,7 @@ onMounted(() => {
 
 const getRoles = async () => {
     try {
-        const res = await axios.get(`${config.public.BACKEND_URL}/roles`, {
+        const res = await axios.get(`${config.public.BACKEND_URL}/admin/roles`, {
             withCredentials: true
         })
         const data = res.data.data as Roles
@@ -30,13 +32,13 @@ const getRoles = async () => {
 
 const getUser = async () => {
     try {
-        const res = await axios.get(`${config.public.BACKEND_URL}/users/${route.params.username}`, {
+        const res = await axios.get(`${config.public.BACKEND_URL}/admin/users/${route.params.username}`, {
             withCredentials: true
         })
         const data = res.data.user as User
         user.value = {
             balance: data.balance,
-            // email: data.email,
+            email: data.email,
             id: data.id,
             name: data.name,
             username: data.username,
@@ -45,8 +47,13 @@ const getUser = async () => {
 
         name.value = data.name
         username.value = data.username
+        email.value = data.email
+        balance.value = data.balance
     } catch (error) {
         console.error(error);
+        if (error instanceof AxiosError) {
+            alert(error.response?.data.message ?? error.message)
+        }
     }
 }
 
@@ -74,17 +81,21 @@ const saveUser = async (event: Event) => {
     const body = {
         name: name.value,
         username: username.value,
-        roles: selectedRoles
+        roles: selectedRoles,
+        email: email.value,
+        balance: Number(balance.value)
     }
 
     try {
-        await axios.patch(`${config.public.BACKEND_URL}/users/${route.params.username}`, body, {
+        await axios.patch(`${config.public.BACKEND_URL}/admin/users/${route.params.username}`, body, {
             withCredentials: true
         })
         await getUser()
         alert('updated!')
     } catch (error) {
-        // 
+        if (error instanceof AxiosError) {
+            alert(error.response?.data.message ?? error.message)
+        }
     }
 }
 </script>
@@ -98,10 +109,18 @@ const saveUser = async (event: Event) => {
                     <label for="name" class="capitalize">name</label>
                     <input type="text" name="name" id="name" v-model="name" class="border py-1 px-2" required>
                 </div>
-
                 <div class="grid gap-1">
                     <label for="username" class="capitalize">username</label>
                     <input type="text" name="username" id="username" v-model="username" class="border py-1 px-2"
+                        required>
+                </div>
+                <div class="grid gap-1">
+                    <label for="email" class="capitalize">email</label>
+                    <input type="text" name="email" id="email" v-model="email" class="border py-1 px-2" required>
+                </div>
+                <div class="grid gap-1">
+                    <label for="balance" class="capitalize">balance</label>
+                    <input type="number" name="balance" id="balance" v-model="balance" class="border py-1 px-2"
                         required>
                 </div>
                 <div class="grid gap-1">
