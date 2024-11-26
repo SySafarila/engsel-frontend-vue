@@ -55,8 +55,9 @@ const acceptWithdraw = async (id: string) => {
     }
 }
 
-watch(() => route.query, () => {
-    getWithdraws()
+watch(() => route.query, async () => {
+    await getWithdraws()
+    showMore.value = true
 })
 </script>
 
