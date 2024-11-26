@@ -39,3 +39,19 @@ export type Role = {
 };
 
 export type Roles = Role[];
+
+export type Withdraw = {
+  id: string;
+  amount: number;
+  created_at: string;
+  updated_at: string;
+  is_pending: boolean;
+  user: {
+    id: string;
+    name: string;
+    username: string;
+    email: string;
+  };
+};
+
+export type Withdraws = Withdraw[];
