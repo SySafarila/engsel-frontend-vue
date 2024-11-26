@@ -81,8 +81,9 @@ watch(() => route.query, async () => {
                     <div class="flex justify-between items-center">
                         <p v-if="withdraw.is_pending == true">Pending</p>
                         <p v-if="withdraw.is_pending == false">Sukses</p>
-                        <button type="button" class="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-2"
-                            @click="acceptWithdraw(withdraw.id)" v-if="withdraw.is_pending == true">ACCEPT</button>
+                        <!-- <button type="button" class="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-2"
+                            @click="acceptWithdraw(withdraw.id)" v-if="withdraw.is_pending == true">ACCEPT</button> -->
+                        <NuxtLink class="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-2" :to="`/admin/withdraws/${withdraw.id}`">ACCEPT</NuxtLink>
                     </div>
                 </div>
                 <button type="button" class="md:col-span-2 bg-gray-100 py-2 border hover:bg-gray-200"
