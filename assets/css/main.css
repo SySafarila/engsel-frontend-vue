@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+  .sidebar {
+    @apply bg-white fixed top-0 left-0 h-screen border w-1/2 transform -translate-x-full md:sticky md:translate-x-0 md:w-80 z-20;
+  }
+
+  .sidebar.open {
+    @apply -translate-x-0;
+  }
+}

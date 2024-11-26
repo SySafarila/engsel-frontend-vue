@@ -56,12 +56,35 @@ const getCurrentUser = async () => {
         }
     }
 }
+
+const handleSidebarBackdrop = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const sidebar = document.getElementById('sidebar')
+    const sidebarBackdrop = document.getElementById('sidebar-backdrop')
+    if (sidebar && sidebarBackdrop) {
+        if (sidebar.classList.contains('open')) {
+            sidebar.classList.remove('open')
+            sidebarBackdrop.classList.add('hidden')
+        } else {
+            sidebar.classList.add('open')
+            sidebarBackdrop.classList.remove('hidden')
+        }
+    }
+}
 </script>
 
 <template>
+    <nav class="px-5 py-3 border-b md:hidden flex justify-end fixed w-full bg-white">
+        <button @click="handleSidebarBackdrop">Menu</button>
+    </nav>
     <div class="max-w-screen-lg w-full mx-auto flex">
         <Sidebar />
-        <div class="p-5 border-r w-full">
+        <div id="sidebar-backdrop"
+            class="fixed top-0 left-0 w-full h-full bg-black/25 backdrop-blur-[2px] z-10 md:hidden hidden"
+            @click="handleSidebarBackdrop" />
+        <div class="p-5 border-r w-full mt-[49px] md:mt-0">
             <slot />
         </div>
     </div>
