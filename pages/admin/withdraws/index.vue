@@ -7,21 +7,30 @@ const config = useRuntimeConfig()
 const route = useRoute()
 const withdraws = ref<Withdraws>([])
 const firstLoading = ref<boolean>(true)
+const showMore = ref<boolean>(true)
 
 onMounted(() => {
     getWithdraws()
 })
 
-const getWithdraws = async () => {
+const getWithdraws = async (cursor?: string) => {
     try {
         const res = await axios.get(`${config.public.BACKEND_URL}/admin/withdraws`, {
             withCredentials: true,
             params: {
-                is_pending: route.query.is_pending
+                is_pending: route.query.is_pending,
+                cursor: cursor
             }
         })
         const data = res.data.data as Withdraws
-        withdraws.value = data
+        if (cursor) {
+            withdraws.value = withdraws.value.concat(data)
+            if (data.length == 0) {
+                showMore.value = false
+            }
+        } else {
+            withdraws.value = data
+        }
 
         if (firstLoading.value) {
             firstLoading.value = false
@@ -65,7 +74,7 @@ watch(() => route.query, () => {
             </div>
             <p v-if="firstLoading">Loading...</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2" v-if="!firstLoading">
-                <div v-for="withdraw in withdraws" class="p-3 bg-gray-100 border">
+                <div v-for="withdraw in withdraws" class="p-3 bg-gray-100 border" :key="withdraw.id" :id="withdraw.id">
                     <p>Rp {{ withdraw.amount }}</p>
                     <p>By {{ withdraw.user.username }}</p>
                     <div class="flex justify-between items-center">
@@ -75,6 +84,9 @@ watch(() => route.query, () => {
                             @click="acceptWithdraw(withdraw.id)" v-if="withdraw.is_pending == true">ACCEPT</button>
                     </div>
                 </div>
+                <button type="button" class="md:col-span-2 bg-gray-100 py-2 border hover:bg-gray-200"
+                    @click="getWithdraws(withdraws[withdraws.length - 1].id)"
+                    v-if="withdraws.length > 0 && showMore == true">More</button>
             </div>
         </div>
     </NuxtLayout>
