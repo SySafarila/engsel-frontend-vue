@@ -74,16 +74,22 @@ watch(() => route.query, async () => {
                     Success</NuxtLink>
             </div>
             <p v-if="firstLoading">Loading...</p>
+            <p v-if="!firstLoading && withdraws.length == 0">Data tidak ada</p>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2" v-if="!firstLoading">
                 <div v-for="withdraw in withdraws" class="p-3 bg-gray-100 border" :key="withdraw.id" :id="withdraw.id">
                     <p>Rp {{ withdraw.amount }}</p>
                     <p>By {{ withdraw.user.username }}</p>
                     <div class="flex justify-between items-center">
                         <p v-if="withdraw.is_pending == true">Pending</p>
-                        <p v-if="withdraw.is_pending == false">Sukses</p>
+                        <div v-if="withdraw.is_pending == false" class="flex justify-between w-full">
+                            <span class="text-green-500">Sukses</span>
+                            <a :href="`${config.public.BACKEND_URL}/withdraws/${withdraw.id}/image`" target="_blank"
+                                rel="noopener noreferrer" class="text-blue-500 hover:underline">Lihat gambar</a>
+                        </div>
                         <!-- <button type="button" class="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-2"
                             @click="acceptWithdraw(withdraw.id)" v-if="withdraw.is_pending == true">ACCEPT</button> -->
-                        <NuxtLink class="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-2" :to="`/admin/withdraws/${withdraw.id}`">ACCEPT</NuxtLink>
+                        <NuxtLink class="text-xs bg-green-500 hover:bg-green-600 text-white px-3 py-2"
+                            :to="`/admin/withdraws/${withdraw.id}`" v-if="withdraw.is_pending">ACCEPT</NuxtLink>
                     </div>
                 </div>
                 <button type="button" class="md:col-span-2 bg-gray-100 py-2 border hover:bg-gray-200"

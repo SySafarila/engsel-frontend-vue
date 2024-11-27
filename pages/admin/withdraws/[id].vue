@@ -50,7 +50,7 @@ const acceptWithdraw = async (event: Event) => {
         })
 
         console.log(res);
-        router.push('/admin/withdraws')
+        router.push('/admin/withdraws?is_pending=false')
     } catch (error) {
         // 
     }
