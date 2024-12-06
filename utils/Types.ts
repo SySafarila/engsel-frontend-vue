@@ -55,3 +55,17 @@ export type Withdraw = {
 };
 
 export type Withdraws = Withdraw[];
+
+export type Bank = {
+  id: string;
+  bank: string;
+  number: number;
+  verified_at: null | Date;
+  user: {
+    email: string;
+    name: string;
+    username: string;
+  };
+};
+
+export type Banks = Bank[];

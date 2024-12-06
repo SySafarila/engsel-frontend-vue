@@ -12,13 +12,11 @@ const login = async (e: Event) => {
     isSending.value = true
 
     try {
-        const res = await axios.post(`${config.public.BACKEND_URL}/auth/login`, {
+        await axios.post(`${config.public.BACKEND_URL}/auth/login`, {
             email: email.value,
             password: password.value
-        })
-        const accessToken = res.data.token
-        await axios.post('/api/save-token', {
-            access_token: accessToken
+        }, {
+            withCredentials: true
         })
 
         isSending.value = false

@@ -76,7 +76,8 @@ const handleSidebarBackdrop = (e: Event) => {
 </script>
 
 <template>
-    <nav class="px-5 py-3 border-b md:hidden flex justify-end fixed w-full bg-white">
+    <nav class="px-5 py-3 border-b md:hidden flex justify-between fixed w-full bg-white">
+        <NuxtLink to="/admin">Engsel</NuxtLink>
         <button @click="handleSidebarBackdrop">Menu</button>
     </nav>
     <div class="max-w-screen-lg w-full mx-auto flex">
